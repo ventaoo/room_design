@@ -1,0 +1,12 @@
+diffusers
+transformers
+accelerate
+controlnet_aux
+segment-anything
+timm
+opencv-python
+matplotlib
+pyyaml
+scipy
+torch
+torchvision

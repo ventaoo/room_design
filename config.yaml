@@ -1,0 +1,25 @@
+device: "cuda"
+
+models:
+  # LLM (规划大脑)
+  llm: "Qwen/Qwen2.5-0.5B-Instruct"
+  
+  # 风格迁移相关
+  sd_base: "SG161222/Realistic_Vision_V5.1_noVAE"
+  controlnet_depth: "lllyasviel/control_v11f1p_sd15_depth"
+  depth_preprocessor: "lllyasviel/Annotators"
+  
+  # 视觉识别相关
+  grounding_dino: "IDEA-Research/grounding-dino-base"
+  sam_checkpoint: "sam_vit_h_4b8939.pth"
+  sam_url: "https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth"
+  sam_type: "vit_h"
+  
+  # 局部重绘相关
+  inpainting: "Uminosachi/realisticVisionV51_v51VAE-inpainting"
+
+parameters:
+  sd_inference_steps: 25
+  guidance_scale: 7.5
+  controlnet_strength: 0.6
+  inpainting_strength: 0.95
