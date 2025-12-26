@@ -59,7 +59,7 @@ class DesignBrain:
             {"role": "user", "content": user_text}
         ]
         
-        text = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True, enable_thinking=False) # Qwen3 0.6b thinking mode
+        text = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True, enable_thinking=True) # Qwen3 0.6b thinking mode
         model_inputs = self.tokenizer([text], return_tensors="pt").to(self.device)
         
         generated_ids = self.model.generate(
@@ -72,7 +72,16 @@ class DesignBrain:
         generated_ids = [
             output_ids[len(input_ids):] for input_ids, output_ids in zip(model_inputs.input_ids, generated_ids)
         ]
-        response = self.tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
+        output_ids = generated_ids[0][len(model_inputs.input_ids[0]):].tolist() 
+
+        # parsing thinking content
+        try:
+            # rindex finding 151668 (</think>)
+            index = len(output_ids) - output_ids[::-1].index(151668)
+        except ValueError:
+            index = 0
+        # thinking_content = self.tokenizer.decode(output_ids[:index], skip_special_tokens=True).strip("\n")
+        response = self.tokenizer.decode(output_ids[index:], skip_special_tokens=True).strip("\n")
         
         try:
             clean_json = response.strip().replace("```json", "").replace("```", "")
