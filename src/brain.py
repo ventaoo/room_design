@@ -59,7 +59,7 @@ class DesignBrain:
             {"role": "user", "content": user_text}
         ]
         
-        text = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True, enable_thinking=True) # Qwen3 0.6b thinking mode
+        text = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True, enable_thinking=False) # Qwen3 0.6b thinking mode
         model_inputs = self.tokenizer([text], return_tensors="pt").to(self.device)
         
         generated_ids = self.model.generate(
