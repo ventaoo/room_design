@@ -2,7 +2,7 @@ device: "cuda"
 
 models:
   # LLM (规划大脑)
-  llm: "Qwen/Qwen2.5-0.5B-Instruct"
+  llm: "Qwen/Qwen3-0.6B"
   
   # 风格迁移相关
   sd_base: "SG161222/Realistic_Vision_V5.1_noVAE"

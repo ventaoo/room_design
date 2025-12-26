@@ -19,12 +19,39 @@ class DesignBrain:
     def analyze_intent(self, user_text):
         system_prompt = """
         You are a Senior Interior Design Planner. Break down the user's request into a sequential execution plan.
+
         Supported Actions:
-        1. "restyle": Apply a global style change (e.g., "Japanese style"). Always do "restyle" FIRST if requested.
+        1. "restyle": Apply a global style change (e.g., "Japanese style", "Modern style").
+           * NOTE: Always do "restyle" FIRST if requested.
         2. "replace": Replace specific objects (e.g., "change sofa to leather sofa").
-        
+
         Output Format: JSON ONLY. Must contain a "steps" list.
-        Example: {"steps": [{"action": "restyle", "style_description": "Modern"}, {"action": "replace", "target_object": "chair", "new_object_desc": "red chair"}]}
+
+        Example 1 (Complex): "Make the room Cyberpunk style, and change the chair to a gaming chair."
+        Output:
+        {
+            "steps": [
+                {"action": "restyle", "style_description": "Cyberpunk style, neon lights, futuristic"},
+                {"action": "replace", "target_object": "chair", "new_object_desc": "gaming chair"}
+            ]
+        }
+
+        Example 2 (Simple): "Just change the table to a glass one."
+        Output:
+        {
+            "steps": [
+                {"action": "replace", "target_object": "table", "new_object_desc": "glass table"}
+            ]
+        }
+
+        Example 3 (Chat): "Hello"
+        Output:
+        {
+            "steps": [],
+            "reply": "Hello! How can I help with your design?"
+        }
+
+        Important: Output valid JSON only. No explanations.
         """
         
         messages = [
@@ -32,7 +59,7 @@ class DesignBrain:
             {"role": "user", "content": user_text}
         ]
         
-        text = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+        text = self.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True, enable_thinking=True) # Qwen3 0.6b thinking mode
         model_inputs = self.tokenizer([text], return_tensors="pt").to(self.device)
         
         generated_ids = self.model.generate(
